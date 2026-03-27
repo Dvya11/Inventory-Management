@@ -1,0 +1,220 @@
+@model Purchase
+
+@{
+    ViewData["Title"] = "New Purchase Order";
+}
+
+<style>
+    :root {
+        --primary: #E11D48;
+        --primary-hover: #BE123C;
+        --bg-card: #FFFFFF;
+        --text-main: #4C0519;
+        --text-muted: #9F1239;
+        --danger: #EE5D50;
+        --border: #FCE7EB;
+        --bg-body: #FFF7F8;
+    }
+
+    .page-container { padding: 5px; font-family: 'Inter', sans-serif; }
+    .page-header { margin-bottom: 30px; }
+    .page-title { font-size: 32px; font-weight: 700; color: var(--text-main); margin: 0; }
+
+    .form-card {
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 30px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        max-width: 760px;
+    }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display:block; margin-bottom: 8px; font-weight: 600; color: var(--text-main); }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background-color: var(--bg-body);
+        color: var(--text-main);
+        outline: none;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
+        background-color: #fff;
+    }
+
+    .validation-error { color: var(--danger); font-size: 12px; margin-top: 5px; display: block; }
+
+    .validation-message {
+        background-color: rgba(238, 93, 80, 0.1);
+        color: var(--danger);
+        border-left: 3px solid var(--danger);
+        border-radius: 8px;
+        padding: 12px 16px;
+        margin-bottom: 16px;
+    }
+
+    .hint {
+        margin-top: 6px;
+        font-size: 12px;
+        color: var(--text-muted);
+    }
+
+    .readonly-box {
+        background: #fff;
+        border: 1px dashed var(--border);
+        border-radius: 8px;
+        padding: 12px 16px;
+        color: var(--text-main);
+        font-weight: 600;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+    }
+
+    .btn-save {
+        background-color: var(--primary);
+        color: #fff;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .btn-save:hover { background-color: var(--primary-hover); }
+
+    .btn-cancel {
+        text-decoration: none;
+        color: var(--text-muted);
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        padding: 12px 20px;
+    }
+</style>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<div class="page-container">
+    <div class="page-header">
+        <h1 class="page-title">New Purchase Order</h1>
+    </div>
+
+    <div class="form-card">
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="validation-message">
+                <i class="fa-solid fa-circle-exclamation"></i> Please correct the errors below
+            </div>
+        }
+
+        <form asp-action="Create" method="post" id="purchaseForm">
+            @Html.AntiForgeryToken()
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label asp-for="ProductId">Product</label>
+                    <select asp-for="ProductId"
+                            asp-items="@(ViewBag.ProductList as IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)"
+                            class="form-control"
+                            id="ProductId">
+                        <option value="">-- Select Product --</option>
+                    </select>
+                    <span asp-validation-for="ProductId" class="validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="SupplierId">Supplier</label>
+                    <select asp-for="SupplierId"
+                            asp-items="@(ViewBag.SupplierList as IEnumerable<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>)"
+                            class="form-control">
+                        <option value="">-- Select Supplier --</option>
+                    </select>
+                    <span asp-validation-for="SupplierId" class="validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Quantity">Purchase Quantity</label>
+                    <input asp-for="Quantity" type="number" min="1" class="form-control" placeholder="Enter quantity" id="Quantity" />
+                    <span asp-validation-for="Quantity" class="validation-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="unitPrice">Unit Price (₹)</label>
+                    <input id="unitPrice" name="unitPrice" type="number" min="0.01" step="0.01" class="form-control" value="@ViewBag.UnitPrice" placeholder="Price will auto-fill after product selection" />
+                    @Html.ValidationMessage("unitPrice", new { @class = "validation-error" })
+                    <div class="hint">This is editable. If changed, product price will also be updated.</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Estimated Total Cost</label>
+                <div id="estimatedTotal" class="readonly-box">₹0.00</div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-save">
+                    <i class="fa-solid fa-check"></i> Save Purchase
+                </button>
+                <a asp-action="Index" class="btn-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        (function () {
+            const productSelect = document.getElementById('ProductId');
+            const unitPriceInput = document.getElementById('unitPrice');
+            const qtyInput = document.getElementById('Quantity');
+            const estimatedTotal = document.getElementById('estimatedTotal');
+
+            function updateTotal() {
+                const price = parseFloat(unitPriceInput.value || '0');
+                const qty = parseInt(qtyInput.value || '0');
+                const total = price * qty;
+                estimatedTotal.textContent = `₹${total.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            }
+
+            async function fetchPrice() {
+                const productId = productSelect.value;
+                if (!productId) {
+                    unitPriceInput.value = '';
+                    updateTotal();
+                    return;
+                }
+
+                try {
+                    const res = await fetch(`/Purchases/GetProductPrice?productId=${productId}`);
+                    if (!res.ok) return;
+                    const data = await res.json();
+                    unitPriceInput.value = data.price;
+                    updateTotal();
+                } catch {
+                    // ignore
+                }
+            }
+
+            productSelect.addEventListener('change', fetchPrice);
+            unitPriceInput.addEventListener('input', updateTotal);
+            qtyInput.addEventListener('input', updateTotal);
+            document.addEventListener('DOMContentLoaded', updateTotal);
+            updateTotal();
+        })();
+    </script>
+}
