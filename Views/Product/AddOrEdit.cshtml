@@ -160,6 +160,12 @@
                 <span asp-validation-for="LowStockThreshold" class="validation-error"></span>
             </div>
 
+            <div class="form-group">
+                <label asp-for="Description">Description</label>
+                <textarea asp-for="Description" class="form-control" placeholder="Enter product description (10-1000 characters)" rows="5"></textarea>
+                <span asp-validation-for="Description" class="validation-error"></span>
+            </div>
+
             <div class="form-actions">
                 <button type="submit" class="btn-save">
                     <i class="fa-solid fa-check"></i> @(Model.Id == 0 ? "Save Product" : "Update Product")

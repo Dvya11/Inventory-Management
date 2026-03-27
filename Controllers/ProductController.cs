@@ -37,7 +37,6 @@ namespace InventoryManagement.Controllers
         public IActionResult AddOrEdit(Product product)
         {
             ModelState.Remove("StockTransactions");
-            ModelState.Remove("Sales");
             
             if (ModelState.IsValid)
             {

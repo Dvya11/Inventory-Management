@@ -10,6 +10,7 @@ public class StockTransaction
     public int ProductId { get; set; }
 
     [Required(ErrorMessage = "Transaction type is required")]
+    [RegularExpression(@"^(IN|OUT)$", ErrorMessage = "Type must be either 'IN' or 'OUT'")]
     public string Type { get; set; } // IN / OUT
 
     [Required(ErrorMessage = "Quantity is required")]

@@ -1,0 +1,316 @@
+@model StockTransaction
+
+@{
+    ViewData["Title"] = "Add Stock Transaction";
+}
+
+<style>
+    :root {
+        --primary: #E11D48;
+        --primary-hover: #BE123C;
+        --bg-card: #FFFFFF;
+        --text-main: #4C0519;
+        --text-muted: #9F1239;
+        --danger: #EE5D50;
+        --success: #01B574;
+        --warning: #FFCE20;
+        --border: #FCE7EB;
+        --bg-body: #FFF7F8;
+    }
+
+    .page-container {
+        padding: 5px;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .page-header {
+        margin-bottom: 30px;
+    }
+
+    .page-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: var(--text-main);
+        letter-spacing: -0.5px;
+        margin: 0;
+    }
+    
+    .form-card {
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 30px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        max-width: 600px;
+    }
+
+    .form-group {
+        margin-bottom: 24px;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-main);
+        margin-bottom: 8px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+        transition: 0.2s;
+        background-color: var(--bg-body);
+        color: var(--text-main);
+    }
+
+    .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
+        background-color: white;
+    }
+
+    .form-control.error {
+        border-color: var(--danger);
+        background-color: rgba(238, 93, 80, 0.05);
+    }
+
+    .form-group.error .form-control {
+        border-color: var(--danger);
+    }
+    
+    .validation-error {
+        color: var(--danger);
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+        font-weight: 500;
+    }
+
+    .validation-message {
+        background-color: rgba(238, 93, 80, 0.1);
+        color: var(--danger);
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        border-left: 3px solid var(--danger);
+    }
+
+    .type-options {
+        display: flex;
+        gap: 16px;
+        margin-top: 10px;
+    }
+
+    .type-radio {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.2s;
+        flex: 1;
+    }
+
+    .type-radio input[type="radio"] {
+        cursor: pointer;
+        margin: 0;
+    }
+
+    .type-radio:hover {
+        border-color: var(--primary);
+    }
+
+    .type-radio input[type="radio"]:checked + label {
+        font-weight: 700;
+    }
+
+    .type-in {
+        background-color: rgba(1, 181, 116, 0.05);
+    }
+
+    .type-in input[type="radio"]:checked ~ label {
+        color: var(--success);
+    }
+
+    .type-in input[type="radio"]:checked + label {
+        color: var(--success);
+        font-weight: 700;
+    }
+
+    .type-out {
+        background-color: rgba(238, 93, 80, 0.05);
+    }
+
+    .type-out input[type="radio"]:checked + label {
+        color: var(--danger);
+    }
+
+    .type-out input[type="radio"]:checked + label {
+        color: var(--danger);
+        font-weight: 700;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+    }
+
+    .btn-save {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+    }
+
+    .btn-save:hover {
+        background-color: var(--primary-hover);
+        transform: translateY(-2px);
+    }
+
+    .btn-cancel {
+        background-color: transparent;
+        color: var(--text-muted);
+        text-decoration: none;
+        font-weight: 600;
+        padding: 12px 20px;
+        transition: 0.2s;
+        display: inline-flex;
+        align-items: center;
+        border-radius: 8px;
+    }
+    
+    .btn-cancel:hover {
+        color: var(--text-main);
+        background-color: var(--bg-body);
+    }
+
+    .transaction-info {
+        background-color: rgba(59, 130, 246, 0.05);
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 24px;
+        border-left: 3px solid var(--primary);
+    }
+
+    .transaction-info p {
+        margin: 0;
+        font-size: 14px;
+        color: var(--text-main);
+    }
+
+    .transaction-info strong {
+        color: var(--primary);
+    }
+</style>
+
+<!-- FontAwesome & Google Fonts -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet");
+
+<div class="page-container">
+    <div class="page-header">
+        <h1 class="page-title">Add Stock Transaction</h1>
+    </div>
+
+    <div class="form-card">
+        <div class="transaction-info">
+            <p><i class="fa-solid fa-circle-info"></i> <strong>Manage your inventory:</strong> Use "IN" to add stock or "OUT" to remove stock</p>
+        </div>
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="validation-message">
+                <i class="fa-solid fa-exclamation-circle"></i> Please correct the errors below
+            </div>
+            
+            @if (ViewData.ModelState.Values.Any(v => v.Errors.Count > 0))
+            {
+                <div class="validation-message" style="margin-top: 10px; background-color: rgba(238, 93, 80, 0.15);">
+                    <ul style="margin: 0; padding-left: 20px;">
+                        @foreach (var modelState in ViewData.ModelState.Values)
+                        {
+                            @foreach (var error in modelState.Errors)
+                            {
+                                <li style="color: var(--danger); margin: 5px 0;">@error.ErrorMessage</li>
+                            }
+                        }
+                    </ul>
+                </div>
+            }
+        }
+
+        <form asp-action="Create" method="post" id="stockForm" novalidate>
+            @Html.AntiForgeryToken()
+            <div class="form-group @(ViewData.ModelState.ContainsKey("ProductId") && ViewData.ModelState["ProductId"].Errors.Count > 0 ? "error" : "")">
+                <label asp-for="ProductId">Select Product</label>
+                <select asp-for="ProductId" class="form-control" id="ProductId" required data-val="true" data-val-required="Product is required" data-val-number="ProductId field is required.">
+                    <option value="0">-- Choose a Product --</option>
+                    @if(ViewBag.Products != null)
+                    {
+                        @foreach(var product in (List<Product>)ViewBag.Products)
+                        {
+                            <option value="@product.Id">@product.Name (Stock: @product.Quantity)</option>
+                        }
+                    }
+                </select>
+                <span asp-validation-for="ProductId" class="validation-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label>Transaction Type</label>
+                <div class="type-options">
+                    <div class="type-radio type-in">
+                        <input type="radio" id="typeIn" name="Type" value="IN" asp-for="Type" />
+                        <label for="typeIn" style="margin: 0; cursor: pointer;">
+                            <i class="fa-solid fa-arrow-down"></i> Stock IN
+                        </label>
+                    </div>
+                    <div class="type-radio type-out">
+                        <input type="radio" id="typeOut" name="Type" value="OUT" asp-for="Type" />
+                        <label for="typeOut" style="margin: 0; cursor: pointer;">
+                            <i class="fa-solid fa-arrow-up"></i> Stock OUT
+                        </label>
+                    </div>
+                </div>
+                <span asp-validation-for="Type" class="validation-error"></span>
+            </div>
+
+            <div class="form-group @(ViewData.ModelState.ContainsKey("Quantity") && ViewData.ModelState["Quantity"].Errors.Count > 0 ? "error" : "")">
+                <label asp-for="Quantity">Quantity</label>
+                <input asp-for="Quantity" type="number" class="form-control" placeholder="Enter quantity" min="1" />
+                <span asp-validation-for="Quantity" class="validation-error"></span>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-save">
+                    <i class="fa-solid fa-check"></i> Save Transaction
+                </button>
+                <a asp-action="Index" class="btn-cancel">
+                    <i class="fa-solid fa-times"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
