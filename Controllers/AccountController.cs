@@ -39,5 +39,10 @@ namespace WebApplication1.Controllers
             TempData["Success"] = "Registration Successful!";
             return RedirectToAction("Login");
         }
+
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
     }
 }
