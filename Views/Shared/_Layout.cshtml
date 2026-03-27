@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - Inventory</title>
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
 
     <style>
             body {
@@ -40,11 +41,20 @@
                 }
 
             .menu a {
-                display: block;
+                display: flex;
+                align-items: center;
+                gap: 12px;
                 padding: 12px 20px;
                 color: #bbb;
                 text-decoration: none;
                 transition: 0.2s;
+                font-weight: 500;
+            }
+
+            .menu a i {
+                width: 20px;
+                text-align: center;
+                font-size: 16px;
             }
 
                 .menu a:hover,
@@ -108,13 +118,37 @@
             <div class="logo">📦 <span>Inventory</span></div>
 
             <div class="menu">
-                <a class="active" asp-controller="User" asp-action="Dashboard">Dashboard</a>
-                <a asp-controller="Product" asp-action="Index">Products</a>
-                <a asp-controller="Stock" asp-action="Index">Stock</a>
-                <a href="#">Sales</a>
-                <a href="#">Purchases</a>
-                <a href="#">Suppliers</a>
-                <a href="#">Reports</a>
+                @{
+                    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+                }
+                
+                <a class="@(controller == "User" ? "active" : "")" asp-controller="User" asp-action="Dashboard">
+                    <i class="fa-solid fa-chart-pie"></i> Dashboard
+                </a>
+                
+                <a class="@(controller == "Product" ? "active" : "")" asp-controller="Product" asp-action="Index">
+                    <i class="fa-solid fa-boxes-stacked"></i> Products
+                </a>
+                
+                <a class="@(controller == "Stock" ? "active" : "")" asp-controller="Stock" asp-action="Index">
+                    <i class="fa-solid fa-arrow-right-arrow-left"></i> Stock
+                </a>
+                
+                <a class="@(controller == "Sales" ? "active" : "")" asp-controller="Sales" asp-action="Index">
+                    <i class="fa-solid fa-cart-shopping"></i> Sales
+                </a>
+                
+                <a class="@(controller == "Purchases" ? "active" : "")" asp-controller="Purchases" asp-action="Index">
+                    <i class="fa-solid fa-truck-fast"></i> Purchases
+                </a>
+                
+                <a class="@(controller == "Suppliers" ? "active" : "")" asp-controller="Suppliers" asp-action="Index">
+                    <i class="fa-solid fa-users"></i> Suppliers
+                </a>
+                
+                <a class="@(controller == "Reports" ? "active" : "")" asp-controller="Reports" asp-action="Index">
+                    <i class="fa-solid fa-chart-line"></i> Reports
+                </a>
             </div>
         </div>
 
@@ -124,8 +158,8 @@
             <!-- TOPBAR -->
             <div class="header">
                 <a class="top-link" asp-controller="Account" asp-action="Logout"><span>🚪</span><span>Logout</span></a>
-                <a class="top-link" href="#"><span>⚙️</span><span>Settings</span></a>
-                <a class="top-link" href="#"><span>❓</span><span>Get Help</span></a>
+                <a class="top-link" asp-controller="Settings" asp-action="Index"><span>⚙️</span><span>Settings</span></a>
+                <a class="top-link" asp-controller="Help" asp-action="Index"><span>❓</span><span>Get Help</span></a>
             </div>
 
             <div class="content">
@@ -135,5 +169,10 @@
         </div>
 
     </div>
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

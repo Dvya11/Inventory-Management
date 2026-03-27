@@ -1,0 +1,239 @@
+@model IEnumerable<Sale>
+
+@{
+    ViewData["Title"] = "Sales Overview";
+}
+
+<style>
+    :root {
+        --primary: #E11D48;
+        --primary-hover: #BE123C;
+        --bg-card: #FFFFFF;
+        --text-main: #4C0519;
+        --text-muted: #9F1239;
+        --danger: #EE5D50;
+        --success: #01B574;
+        --warning: #FFCE20;
+        --border: #FCE7EB;
+        --blue: #3b82f6;
+    }
+    
+    .page-container {
+        padding: 5px;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .page-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: var(--text-main);
+        letter-spacing: -0.5px;
+        margin: 0;
+    }
+
+    .btn-primary {
+        background-color: var(--primary);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: 0.2s;
+        text-decoration: none;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--primary-hover);
+        transform: translateY(-2px);
+        color: white;
+    }
+
+    /* FILTERS & SEARCH */
+    .filters-bar {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 24px;
+        background: var(--bg-card);
+        padding: 16px;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    }
+
+    .search-box {
+        flex: 1;
+        position: relative;
+    }
+
+    .search-box i {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 10px 14px 10px 40px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+        transition: 0.2s;
+    }
+
+    .search-input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
+    }
+
+    /* TABLE */
+    .data-card {
+        background-color: var(--bg-card);
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        overflow: hidden;
+    }
+
+    .custom-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .custom-table th {
+        text-align: left;
+        padding: 16px;
+        color: var(--text-muted);
+        font-weight: 600;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid var(--border);
+        background: rgba(255, 247, 248, 0.5);
+    }
+
+    .custom-table td {
+        padding: 16px;
+        border-bottom: 1px solid var(--border);
+        font-size: 14px;
+        color: var(--text-main);
+        font-weight: 500;
+        vertical-align: middle;
+        transition: background 0.2s ease;
+    }
+
+    .custom-table tr:hover td {
+        background-color: rgba(255, 247, 248, 0.8);
+    }
+
+    .product-cell {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .product-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        background-color: rgba(225, 29, 72, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary);
+        font-size: 16px;
+    }
+
+    .amount {
+        font-weight: 700;
+        color: var(--success);
+        font-size: 15px;
+    }
+
+</style>
+
+<!-- FontAwesome & Google Fonts -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+<div class="page-container">
+    <div class="page-header">
+        <h1 class="page-title">Sales History</h1>
+        <a href="#" class="btn-primary">
+            <i class="fa-solid fa-cart-shopping"></i> Register Sale
+        </a>
+    </div>
+
+    <div class="filters-bar">
+        <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" class="search-input" placeholder="Search sales by Receipt ID or Product..." />
+        </div>
+    </div>
+
+    <div class="data-card">
+        <div style="overflow-x: auto;">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Receipt ID</th>
+                        <th>Product Details</th>
+                        <th>Qty Sold</th>
+                        <th>Total Amount</th>
+                        <th>Date & Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach(var item in Model)
+                        {
+                            <tr>
+                                <td style="color: var(--text-muted); font-weight: 500;">
+                                    #REC-@item.Id.ToString("D5")
+                                </td>
+                                <td>
+                                    <div class="product-cell">
+                                        <div class="product-icon"><i class="fa-solid fa-bag-shopping"></i></div>
+                                        <span style="font-weight: 600;">@(item.Product?.Name ?? "Unknown Product")</span>
+                                    </div>
+                                </td>
+                                <td style="font-weight: 700;">
+                                    @item.QuantitySold
+                                </td>
+                                <td>
+                                    <span class="amount">₹@item.TotalAmount.ToString("N2")</span>
+                                </td>
+                                <td>
+                                    <span style="color: var(--text-muted);">@item.CreatedAt.ToString("MMM dd, yyyy HH:mm")</span>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                                <i class="fa-solid fa-receipt" style="font-size: 32px; margin-bottom: 15px; color: rgba(225, 29, 72, 0.2);"></i><br/>
+                                No recent sales found.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

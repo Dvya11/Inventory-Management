@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 public class User
@@ -13,6 +13,8 @@ public class User
     [Required(ErrorMessage = "Password is required")]
     [MinLength(6, ErrorMessage = "Password must be at least 6 characters")]
     public string Password { get; set; }
+
+    public string Role { get; set; } = "Seller"; // Can be 'Admin' or 'Seller'
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

@@ -1,0 +1,195 @@
+@{
+    ViewData["Title"] = "Help & Support";
+}
+
+<style>
+    :root {
+        --primary: #E11D48;
+        --bg-card: #FFFFFF;
+        --text-main: #4C0519;
+        --text-muted: #9F1239;
+        --border: #FCE7EB;
+        --bg-body: #FFF7F8;
+    }
+    
+    .page-container {
+        padding: 5px;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .page-header {
+        margin-bottom: 30px;
+    }
+
+    .page-title {
+        font-size: 32px;
+        font-weight: 700;
+        color: var(--text-main);
+        letter-spacing: -0.5px;
+        margin: 0;
+    }
+    
+    .help-header-subtitle {
+        color: var(--text-muted);
+        font-weight: 500;
+        margin-top: 8px;
+    }
+
+    .help-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 24px;
+        margin-bottom: 32px;
+    }
+
+    .help-card {
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        text-align: center;
+        transition: 0.2s;
+        border: 1px solid var(--border);
+        cursor: pointer;
+    }
+
+    .help-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(225, 29, 72, 0.08);
+        border-color: rgba(225, 29, 72, 0.2);
+    }
+
+    .help-icon {
+        width: 60px;
+        height: 60px;
+        background: rgba(225, 29, 72, 0.05);
+        color: var(--primary);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        font-size: 24px;
+        margin-bottom: 16px;
+    }
+
+    .help-card h3 {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 8px;
+    }
+
+    .help-card p {
+        font-size: 14px;
+        color: var(--text-muted);
+        font-weight: 500;
+    }
+
+    .faq-section {
+        background: var(--bg-card);
+        border-radius: 16px;
+        padding: 30px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+    }
+
+    .faq-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 24px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 12px;
+    }
+
+    .faq-item {
+        border-bottom: 1px solid var(--border);
+        padding: 16px 0;
+    }
+
+    .faq-item:last-child {
+        border-bottom: none;
+    }
+
+    .faq-question {
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--text-main);
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .faq-question i {
+        color: var(--primary);
+        font-size: 14px;
+    }
+
+    .faq-answer {
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--text-muted);
+        padding-left: 26px;
+    }
+
+</style>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+<div class="page-container">
+    <div class="page-header">
+        <h1 class="page-title">How can we help you?</h1>
+        <p class="help-header-subtitle">Search for answers, browse our topics, or reach out to support.</p>
+    </div>
+
+    <div class="help-grid">
+        <div class="help-card">
+            <div class="help-icon"><i class="fa-solid fa-book-open"></i></div>
+            <h3>User Guides</h3>
+            <p>Step-by-step documentation on how to use every feature.</p>
+        </div>
+        <div class="help-card">
+            <div class="help-icon"><i class="fa-solid fa-video"></i></div>
+            <h3>Video Tutorials</h3>
+            <p>Watch quick videos to learn the basics in under 5 minutes.</p>
+        </div>
+        <div class="help-card">
+            <div class="help-icon"><i class="fa-solid fa-comments"></i></div>
+            <h3>Live Chat</h3>
+            <p>Connect immediately with one of our support agents.</p>
+        </div>
+    </div>
+
+    <div class="faq-section">
+        <h2 class="faq-title">Frequently Asked Questions</h2>
+        
+        <div class="faq-item">
+            <div class="faq-question">
+                 <i class="fa-solid fa-circle-question"></i> How do I add a new product?
+            </div>
+            <div class="faq-answer">
+                Navigate to the 'Products' tab using the sidebar menu and click on the 'Add Product' button in the top right corner. Fill out the mandatory SKU, Price, and Name fields.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">
+                 <i class="fa-solid fa-circle-question"></i> How do I reset my password?
+            </div>
+            <div class="faq-answer">
+                Click on the Settings icon (⚙️) on the top right bar, select 'Settings', and navigate to the 'Change Password' card on the left side of the dashboard.
+            </div>
+        </div>
+        
+        <div class="faq-item">
+            <div class="faq-question">
+                 <i class="fa-solid fa-circle-question"></i> What does the Red Status Badge indicate?
+            </div>
+            <div class="faq-answer">
+                A red status badge in the Stock or Products view signifies that the designated inventory item is completely Out Of Stock and requires an urgent replenishing order.
+            </div>
+        </div>
+    </div>
+</div>
