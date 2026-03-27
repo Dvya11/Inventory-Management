@@ -35,3 +35,7 @@ app.MapControllerRoute(
     pattern: "{controller=Account}/{action=Login}/{id?}");
 
 app.Run();
+
+builder.Services.AddSession();
+
+app.UseSession();
