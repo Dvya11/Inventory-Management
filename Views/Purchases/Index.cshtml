@@ -1,3 +1,5 @@
+@model IEnumerable<Purchase>
+
 @{
     ViewData["Title"] = "Purchases History";
 }
@@ -170,7 +172,7 @@
 <div class="page-container">
     <div class="page-header">
         <h1 class="page-title">Purchases</h1>
-        <a href="#" class="btn-primary">
+        <a asp-action="Create" class="btn-primary">
             <i class="fa-solid fa-truck-fast"></i> New Purchase Order
         </a>
     </div>
@@ -192,17 +194,37 @@
                         <th>Product Details</th>
                         <th>Total Cost</th>
                         <th>Date</th>
+                        <th>Invoice</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if (Model != null)
+                    @if (Model != null && Model.Any())
                     {
-                        <!-- Dynamic generated loop here -->
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td style="color: var(--text-muted); font-weight: 500;">#PO-@item.Id.ToString("D5")</td>
+                                <td style="font-weight: 600;">@(item.Supplier?.Name ?? "Unknown Supplier")</td>
+                                <td>
+                                    <div class="product-cell">
+                                        <div class="product-icon"><i class="fa-solid fa-boxes-stacked"></i></div>
+                                        <span style="font-weight: 600;">@(item.Product?.Name ?? "Unknown Product")</span>
+                                    </div>
+                                </td>
+                                <td><span class="amount">₹@item.TotalCost.ToString("N2")</span></td>
+                                <td><span style="color: var(--text-muted);">@item.CreatedAt.ToString("MMM dd, yyyy HH:mm")</span></td>
+                                <td>
+                                    <a asp-action="DownloadInvoice" asp-route-id="@item.Id" class="btn-primary" style="padding:8px 12px; font-size:12px;">
+                                        <i class="fa-solid fa-file-pdf"></i> PDF
+                                    </a>
+                                </td>
+                            </tr>
+                        }
                     }
                     else
                     {
                         <tr>
-                            <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                            <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-muted);">
                                 <i class="fa-solid fa-file-invoice" style="font-size: 32px; margin-bottom: 15px; color: rgba(225, 29, 72, 0.2);"></i><br/>
                                 No purchase orders found.
                             </td>

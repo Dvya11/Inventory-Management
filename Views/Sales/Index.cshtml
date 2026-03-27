@@ -172,7 +172,7 @@
 <div class="page-container">
     <div class="page-header">
         <h1 class="page-title">Sales History</h1>
-        <a href="#" class="btn-primary">
+        <a asp-action="Create" class="btn-primary">
             <i class="fa-solid fa-cart-shopping"></i> Register Sale
         </a>
     </div>
@@ -194,6 +194,7 @@
                         <th>Qty Sold</th>
                         <th>Total Amount</th>
                         <th>Date & Time</th>
+                        <th>Invoice</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -220,13 +221,18 @@
                                 <td>
                                     <span style="color: var(--text-muted);">@item.CreatedAt.ToString("MMM dd, yyyy HH:mm")</span>
                                 </td>
+                                <td>
+                                    <a asp-action="DownloadInvoice" asp-route-id="@item.Id" class="btn-primary" style="padding:8px 12px; font-size:12px;">
+                                        <i class="fa-solid fa-file-pdf"></i> PDF
+                                    </a>
+                                </td>
                             </tr>
                         }
                     }
                     else
                     {
                         <tr>
-                            <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                            <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-muted);">
                                 <i class="fa-solid fa-receipt" style="font-size: 32px; margin-bottom: 15px; color: rgba(225, 29, 72, 0.2);"></i><br/>
                                 No recent sales found.
                             </td>
