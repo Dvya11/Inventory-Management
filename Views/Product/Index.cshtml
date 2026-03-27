@@ -249,26 +249,13 @@
                         <th>ID</th>
                         <th>Product Name</th>
                         <th>Price</th>
-                        <th>Stock</th>
-                        <th>Status</th>
+                        <th>Description</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach(var item in Model)
                     {
-                        var statusClass = "status-success";
-                        var statusText = "In Stock";
-                        
-                        if(item.Quantity == 0) {
-                            statusClass = "status-danger";
-                            statusText = "Out of Stock";
-                        }
-                        else if (item.Quantity <= item.LowStockThreshold) {
-                            statusClass = "status-warning";
-                            statusText = "Low Stock";
-                        }
-                        
                         <tr>
                             <td style="color: var(--text-muted); font-weight: 500;">#@item.Id.ToString("D4")</td>
                             <td>
@@ -278,13 +265,7 @@
                                 </div>
                             </td>
                             <td style="font-weight: 600;">₹@item.Price.ToString("N2")</td>
-                            <td>
-                                <strong style="font-size: 15px;">@item.Quantity</strong>
-                                <span style="font-size: 12px; color: var(--text-muted); margin-left: 4px;">/ Min @item.LowStockThreshold</span>
-                            </td>
-                            <td>
-                                <span class="status-badge @statusClass">@statusText</span>
-                            </td>
+                            <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">@item.Description</td>
                             <td>
                                 <div class="action-btns">
                                     <a asp-action="AddOrEdit" asp-route-id="@item.Id" class="btn-icon" title="Edit">

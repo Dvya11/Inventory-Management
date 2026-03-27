@@ -22,6 +22,10 @@ public class Product
     [Range(1, 10000, ErrorMessage = "Threshold must be at least 1")]
     public int LowStockThreshold { get; set; }
 
+    [Required(ErrorMessage = "Description is required")]
+    [StringLength(1000, MinimumLength = 10, ErrorMessage = "Description must be between 10 and 1000 characters")]
+    public string Description { get; set; }
+
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 
     public List<StockTransaction> StockTransactions { get; set; }
