@@ -3,47 +3,137 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - WebApplication1</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/WebApplication1.styles.css" asp-append-version="true" />
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WebApplication1</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+    <title>@ViewData["Title"] - Inventory</title>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - WebApplication1 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+
+    <style>
+            body {
+                margin: 0;
+                font-family: 'Segoe UI', sans-serif;
+                background: #f7f8fa;
+            }
+
+            .layout {
+                display: flex;
+            }
+
+            /* SIDEBAR */
+            .sidebar {
+                width: 230px;
+                height: 100vh;
+                background: #0f0f0f;
+                color: white;
+                position: fixed;
+                padding-top: 20px;
+            }
+
+            .logo {
+                font-size: 20px;
+                font-weight: bold;
+                padding: 0 20px;
+                margin-bottom: 30px;
+            }
+
+                .logo span {
+                    color: #ef4444;
+                }
+
+            .menu a {
+                display: block;
+                padding: 12px 20px;
+                color: #bbb;
+                text-decoration: none;
+                transition: 0.2s;
+            }
+
+                .menu a:hover,
+                .menu a.active {
+                    background: #ef4444;
+                    color: white;
+                }
+
+            /* MAIN */
+            .main {
+                margin-left: 230px;
+                width: 100%;
+                padding: 0;
+                min-height: 100vh;
+            }
+
+            /* TOPBAR */
+            .header {
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                gap: 8px;
+                background: #ffffff;
+                border-bottom: 1px solid #e5e7eb;
+                padding: 14px 20px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+                position: sticky;
+                top: 0;
+                z-index: 1000;
+            }
+
+            .top-link {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 8px 10px;
+                color: #374151;
+                text-decoration: none;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: 500;
+                transition: 0.2s;
+            }
+
+            .top-link:hover {
+                background: #f3f4f6;
+                color: #111827;
+            }
+
+            .content {
+                padding: 25px 30px;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="logo">📦 <span>Inventory</span></div>
+
+            <div class="menu">
+                <a class="active" asp-controller="Home" asp-action="Index">Dashboard</a>
+                <a asp-controller="Product" asp-action="Index">Products</a>
+                <a asp-controller="Stock" asp-action="Index">Stock</a>
+                <a href="#">Sales</a>
+                <a href="#">Purchases</a>
+                <a href="#">Suppliers</a>
+                <a href="#">Reports</a>
+            </div>
         </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+
+        <!-- MAIN -->
+        <div class="main">
+
+            <!-- TOPBAR -->
+            <div class="header">
+                <a class="top-link" asp-controller="Account" asp-action="Login"><span>🚪</span><span>Logout</span></a>
+                <a class="top-link" href="#"><span>⚙️</span><span>Settings</span></a>
+                <a class="top-link" href="#"><span>❓</span><span>Get Help</span></a>
+            </div>
+
+            <div class="content">
+                @RenderBody()
+            </div>
+
+        </div>
+
+    </div>
 </body>
 </html>
