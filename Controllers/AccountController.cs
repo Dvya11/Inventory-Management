@@ -1,10 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 
 namespace WebApplication1.Controllers
 {
     public class AccountController : Controller
     {
+        private readonly ApplicationDbContext _context;
+
+        public AccountController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         // ================= LOGIN =================
 
         // GET: Login Page
@@ -15,18 +23,33 @@ namespace WebApplication1.Controllers
 
         // POST: Login
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Login(string email, string password)
         {
-            if (email == "admin@gmail.com" && password == "1234")
+            if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             {
-                TempData["Success"] = "Login Successful!";
-                return RedirectToAction("Index", "Home");
-            }
-            else
-            {
-                ViewBag.Error = "Invalid Email or Password";
+                ViewBag.Error = "Invalid login credentials";
                 return View();
             }
+
+            var user = _context.Users.FirstOrDefault(u => u.Email == email && u.Password == password);
+
+            if (user == null)
+            {
+                ViewBag.Error = "Invalid login credentials";
+                return View();
+            }
+
+            HttpContext.Session.SetInt32("UserId", user.Id);
+            HttpContext.Session.SetString("UserEmail", user.Email);
+
+            return RedirectToAction("Dashboard", "User");
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Login");
         }
 
         // ================= REGISTER =================
