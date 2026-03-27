@@ -18,6 +18,16 @@ namespace WebApplication1.Controllers
         // GET: Login Page
         public IActionResult Login()
         {
+            var userId = HttpContext.Session.GetInt32("UserId");
+            if (userId != null)
+            {
+                var role = HttpContext.Session.GetString("UserRole")?.ToLower();
+                if (role == "user")
+                    return RedirectToAction("Dashboard", "User");
+
+                return RedirectToAction("Index", "Product");
+            }
+
             return View();
         }
 
@@ -34,31 +44,32 @@ namespace WebApplication1.Controllers
 
             try
             {
-                // Hardcoded bypass for easy UI testing without needing a database
-                if (email == "admin@gmail.com" && password == "admin")
-                {
-                    // Assuming valid HTTP context
-                    HttpContext.Session.SetInt32("UserId", 1);
-                    HttpContext.Session.SetString("UserEmail", "admin@gmail.com");
-                    return RedirectToAction("Dashboard", "User");
-                }
+                var normalizedEmail = email.Trim().ToLower();
+                var enteredPassword = password.Trim();
 
-                var user = _context.Users.FirstOrDefault(u => u.Email == email && u.Password == password);
+                var user = _context.Users
+                    .FirstOrDefault(u => u.Email != null && u.Email.Trim().ToLower() == normalizedEmail);
 
-                if (user == null)
+                if (user == null || string.IsNullOrWhiteSpace(user.Password) || user.Password.Trim() != enteredPassword)
                 {
                     ViewBag.Error = "Invalid login credentials";
                     return View();
                 }
 
+                var role = string.IsNullOrWhiteSpace(user.Role) ? "user" : user.Role.Trim().ToLower();
+
                 HttpContext.Session.SetInt32("UserId", user.Id);
                 HttpContext.Session.SetString("UserEmail", user.Email);
+                HttpContext.Session.SetString("UserRole", role);
 
-                return RedirectToAction("Dashboard", "User");
+                if (role == "user")
+                    return RedirectToAction("Dashboard", "User");
+
+                return RedirectToAction("Index", "Product");
             }
             catch (Exception)
             {
-                ViewBag.Error = "Database error. Tip: Use admin@gmail.com / admin to bypass.";
+                ViewBag.Error = "Database error occurred while login.";
                 return View();
             }
         }
@@ -79,6 +90,7 @@ namespace WebApplication1.Controllers
 
         // POST: Register
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult Register(string email, string password)
         {
             try
@@ -89,13 +101,23 @@ namespace WebApplication1.Controllers
                     return View();
                 }
 
-                if (_context.Users.Any(u => u.Email == email))
+                var normalizedEmail = email.Trim().ToLower();
+                var normalizedPassword = password.Trim();
+
+                if (_context.Users.Any(u => u.Email != null && u.Email.Trim().ToLower() == normalizedEmail))
                 {
                     ViewBag.Error = "Email is already registered";
                     return View();
                 }
 
-                var newUser = new User { Email = email, Password = password, CreatedAt = DateTime.Now };
+                var newUser = new User
+                {
+                    Email = normalizedEmail,
+                    Password = normalizedPassword,
+                    Role = "user",
+                    CreatedAt = DateTime.Now
+                };
+
                 _context.Users.Add(newUser);
                 _context.SaveChanges();
 
@@ -128,8 +150,9 @@ namespace WebApplication1.Controllers
                 return View();
             }
 
-            // ?? Dummy check (replace with DB later)
-            if (email != "admin@gmail.com")
+            var normalizedEmail = email.Trim().ToLower();
+            var user = _context.Users.FirstOrDefault(u => u.Email != null && u.Email.Trim().ToLower() == normalizedEmail);
+            if (user == null)
             {
                 ViewBag.Message = "Email not found!";
                 return View();
@@ -138,15 +161,13 @@ namespace WebApplication1.Controllers
             // Generate reset token
             var token = Guid.NewGuid().ToString();
 
-            // ?? Example reset link
+            // Example reset link
             var resetLink = Url.Action(
                 "ResetPassword",
                 "Account",
                 new { token = token },
                 Request.Scheme
             );
-
-            // ?? (Future) Send Email here using SMTP
 
             // For now just show link on screen (for testing)
             ViewBag.Message = "Password reset link generated!";
@@ -179,8 +200,6 @@ namespace WebApplication1.Controllers
                 ViewBag.Message = "Password cannot be empty!";
                 return View();
             }
-
-            // ?? Here you will update password in DB using token
 
             TempData["Success"] = "Password reset successful!";
             return RedirectToAction("Login");

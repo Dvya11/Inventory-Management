@@ -14,7 +14,7 @@ public class User
     [MinLength(6, ErrorMessage = "Password must be at least 6 characters")]
     public string Password { get; set; }
 
-    public string Role { get; set; } = "Seller"; // Can be 'Admin' or 'Seller'
+    public string Role { get; set; } = "user";
 
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

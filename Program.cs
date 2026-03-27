@@ -30,7 +30,48 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseSession();   
+app.UseSession();
+
+app.Use(async (context, next) =>
+{
+    var path = context.Request.Path.Value?.ToLower() ?? string.Empty;
+
+    var isPublicRoute =
+        path.StartsWith("/account/login") ||
+        path.StartsWith("/account/register") ||
+        path.StartsWith("/account/forgotpassword") ||
+        path.StartsWith("/account/resetpassword");
+
+    if (!isPublicRoute)
+    {
+        var userId = context.Session.GetInt32("UserId");
+        if (userId == null)
+        {
+            context.Response.Redirect("/Account/Login");
+            return;
+        }
+    }
+
+    if (path == "/" || path == "/account/login")
+    {
+        var userId = context.Session.GetInt32("UserId");
+        if (userId != null)
+        {
+            var role = context.Session.GetString("UserRole")?.ToLower();
+            if (role == "user")
+            {
+                context.Response.Redirect("/User/Dashboard");
+                return;
+            }
+
+            context.Response.Redirect("/Product/Index");
+            return;
+        }
+    }
+
+    await next();
+});
+
 app.UseAuthorization();
 
 app.MapControllerRoute(

@@ -13,4 +13,13 @@ public class ApplicationDbContext : DbContext
     public DbSet<Sale> Sales { get; set; }
     public DbSet<Supplier> Suppliers { get; set; }
     public DbSet<Purchase> Purchases { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<User>()
+            .Property(u => u.Role)
+            .HasDefaultValue("user");
+    }
 }
