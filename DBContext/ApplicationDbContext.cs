@@ -13,6 +13,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<Sale> Sales { get; set; }
     public DbSet<Supplier> Suppliers { get; set; }
     public DbSet<Purchase> Purchases { get; set; }
+    public DbSet<Seller> Sellers { get; set; }
+    public DbSet<OrderDetail> OrderDetails { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

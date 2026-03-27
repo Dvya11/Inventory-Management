@@ -199,7 +199,7 @@ namespace WebApplication1.Controllers
             {
                 ViewBag.Message = "Password cannot be empty!";
                 return View();
-            }
+            } ViewBag.NewPassword = newPassword;
 
             TempData["Success"] = "Password reset successful!";
             return RedirectToAction("Login");

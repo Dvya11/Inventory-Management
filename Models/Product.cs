@@ -29,4 +29,7 @@ public class Product
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 
     public List<StockTransaction> StockTransactions { get; set; }
+
+    public int SellerId { get; set; }
+    public Seller Seller { get; set; }
 }
